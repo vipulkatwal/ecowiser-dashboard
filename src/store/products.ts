@@ -41,8 +41,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Skincare',
     price: 49.99,
     images: [
-      { id: '1', url: new URL(RadianceSerum1, import.meta.url).href, type: 'local' },
-      { id: '2', url: new URL(RadianceSerum2, import.meta.url).href, type: 'local' }
+      { id: '1', url: RadianceSerum1, type: 'local' },
+      { id: '2', url: RadianceSerum2, type: 'local' }
     ],
     brandId: '1',
     userId: '1',
@@ -61,8 +61,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Skincare',
     price: 39.99,
     images: [
-      { id: '3', url: new URL(HydratingMoisturizer1, import.meta.url).href, type: 'local' },
-      { id: '4', url: new URL(HydratingMoisturizer2, import.meta.url).href, type: 'local' }
+      { id: '3', url: HydratingMoisturizer1, type: 'local' },
+      { id: '4', url: HydratingMoisturizer2, type: 'local' }
     ],
     brandId: '1',
     userId: '1',
@@ -79,8 +79,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Furniture',
     price: 299.99,
     images: [
-      { id: '5', url: new URL(CoffeeTable1, import.meta.url).href, type: 'local' },
-      { id: '6', url: new URL(CoffeeTable2, import.meta.url).href, type: 'local' }
+      { id: '5', url: CoffeeTable1, type: 'local' },
+      { id: '6', url: CoffeeTable2, type: 'local' }
     ],
     brandId: '2',
     userId: '1',
@@ -95,8 +95,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Furniture',
     price: 599.99,
     images: [
-      { id: '7', url: new URL(DiningChairSet1, import.meta.url).href, type: 'local' },
-      { id: '8', url: new URL(DiningChairSet2, import.meta.url).href, type: 'local' }
+      { id: '7', url: DiningChairSet1, type: 'local' },
+      { id: '8', url: DiningChairSet2, type: 'local' }
     ],
     brandId: '2',
     userId: '1',
@@ -117,8 +117,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Electronics',
     price: 199.99,
     images: [
-      { id: '9', url: new URL(SmartSpeaker1, import.meta.url).href, type: 'local' },
-      { id: '10', url: new URL(SmartSpeaker2, import.meta.url).href, type: 'local' }
+      { id: '9', url: SmartSpeaker1, type: 'local' },
+      { id: '10', url: SmartSpeaker2, type: 'local' }
     ],
     brandId: '3',
     userId: '1',
@@ -133,8 +133,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Electronics',
     price: 149.99,
     images: [
-      { id: '11', url: new URL(WirelessEarbuds1, import.meta.url).href, type: 'local' },
-      { id: '12', url: new URL(WirelessEarbuds2, import.meta.url).href, type: 'local' }
+      { id: '11', url: WirelessEarbuds1, type: 'local' },
+      { id: '12', url: WirelessEarbuds2, type: 'local' }
     ],
     brandId: '3',
     userId: '1',
@@ -153,8 +153,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Electronics',
     price: 359.99,
     images: [
-      { id: '13', url: new URL(GamingConsole1, import.meta.url).href, type: 'local' },
-      { id: '14', url: new URL(GamingConsole2, import.meta.url).href, type: 'local' }
+      { id: '13', url: GamingConsole1, type: 'local' },
+      { id: '14', url: GamingConsole2, type: 'local' }
     ],
     brandId: '3',
     userId: '1',
@@ -179,10 +179,10 @@ export const useProductsStore = create<ProductsState>()(
           id: Math.random().toString(36).substr(2, 9),
           userId: '1',
           createdAt: new Date().toISOString(),
-          images: product.images?.map((img) => ({
+          // Ensure local image type for new products
+          images: product.images?.map((img, index) => ({
             ...img,
             id: img.id || Math.random().toString(36).substr(2, 9),
-            url: typeof img.url === 'string' ? img.url : new URL(img.url, import.meta.url).href,
             type: 'local'
           })) || []
         };
@@ -195,10 +195,10 @@ export const useProductsStore = create<ProductsState>()(
             p.id === id ? {
               ...p,
               ...product,
-              images: product.images?.map((img) => ({
+              // Ensure local image type when updating
+              images: product.images?.map((img, index) => ({
                 ...img,
                 id: img.id || Math.random().toString(36).substr(2, 9),
-                url: typeof img.url === 'string' ? img.url : new URL(img.url, import.meta.url).href,
                 type: 'local'
               })) || p.images
             } : p
