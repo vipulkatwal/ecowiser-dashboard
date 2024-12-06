@@ -7,7 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  build: {
-    assetsInlineLimit: 0, // Ensures larger assets are not inlined
-  },
+
 });
