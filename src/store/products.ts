@@ -22,7 +22,6 @@ import WirelessEarbuds2 from '../assets/products/techvibe/wireless-earbuds-2.jpg
 import GamingConsole1 from '../assets/products/techvibe/gaming-console-1.jpg';
 import GamingConsole2 from '../assets/products/techvibe/gaming-console-2.jpg';
 
-// Define the ProductsState interface
 interface ProductsState {
   products: Product[];
   addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'userId'>) => void;
@@ -42,8 +41,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Skincare',
     price: 49.99,
     images: [
-      { id: '1', url: RadianceSerum1, type: 'local' },
-      { id: '2', url: RadianceSerum2, type: 'local' }
+      { id: '1', url: new URL(RadianceSerum1, import.meta.url).href, type: 'local' },
+      { id: '2', url: new URL(RadianceSerum2, import.meta.url).href, type: 'local' }
     ],
     brandId: '1',
     userId: '1',
@@ -62,8 +61,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Skincare',
     price: 39.99,
     images: [
-      { id: '3', url: HydratingMoisturizer1, type: 'local' },
-      { id: '4', url: HydratingMoisturizer2, type: 'local' }
+      { id: '3', url: new URL(HydratingMoisturizer1, import.meta.url).href, type: 'local' },
+      { id: '4', url: new URL(HydratingMoisturizer2, import.meta.url).href, type: 'local' }
     ],
     brandId: '1',
     userId: '1',
@@ -80,8 +79,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Furniture',
     price: 299.99,
     images: [
-      { id: '5', url: CoffeeTable1, type: 'local' },
-      { id: '6', url: CoffeeTable2, type: 'local' }
+      { id: '5', url: new URL(CoffeeTable1, import.meta.url).href, type: 'local' },
+      { id: '6', url: new URL(CoffeeTable2, import.meta.url).href, type: 'local' }
     ],
     brandId: '2',
     userId: '1',
@@ -96,8 +95,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Furniture',
     price: 599.99,
     images: [
-      { id: '7', url: DiningChairSet1, type: 'local' },
-      { id: '8', url: DiningChairSet2, type: 'local' }
+      { id: '7', url: new URL(DiningChairSet1, import.meta.url).href, type: 'local' },
+      { id: '8', url: new URL(DiningChairSet2, import.meta.url).href, type: 'local' }
     ],
     brandId: '2',
     userId: '1',
@@ -118,8 +117,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Electronics',
     price: 199.99,
     images: [
-      { id: '9', url: SmartSpeaker1, type: 'local' },
-      { id: '10', url: SmartSpeaker2, type: 'local' }
+      { id: '9', url: new URL(SmartSpeaker1, import.meta.url).href, type: 'local' },
+      { id: '10', url: new URL(SmartSpeaker2, import.meta.url).href, type: 'local' }
     ],
     brandId: '3',
     userId: '1',
@@ -134,8 +133,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Electronics',
     price: 149.99,
     images: [
-      { id: '11', url: WirelessEarbuds1, type: 'local' },
-      { id: '12', url: WirelessEarbuds2, type: 'local' }
+      { id: '11', url: new URL(WirelessEarbuds1, import.meta.url).href, type: 'local' },
+      { id: '12', url: new URL(WirelessEarbuds2, import.meta.url).href, type: 'local' }
     ],
     brandId: '3',
     userId: '1',
@@ -154,8 +153,8 @@ const DEMO_PRODUCTS: Product[] = [
     category: 'Electronics',
     price: 359.99,
     images: [
-      { id: '13', url: GamingConsole1, type: 'local' },
-      { id: '14', url: GamingConsole2, type: 'local' }
+      { id: '13', url: new URL(GamingConsole1, import.meta.url).href, type: 'local' },
+      { id: '14', url: new URL(GamingConsole2, import.meta.url).href, type: 'local' }
     ],
     brandId: '3',
     userId: '1',
@@ -169,68 +168,60 @@ const DEMO_PRODUCTS: Product[] = [
   }
 ];
 
-// Create the Zustand store with persistent state using the `persist` middleware
 export const useProductsStore = create<ProductsState>()(
   persist(
     (set, get) => ({
-      products: DEMO_PRODUCTS, // Initial demo product data
+      products: DEMO_PRODUCTS,
 
-      // Add a new product to the store
       addProduct: (product) => {
         const newProduct: Product = {
           ...product,
-          id: Math.random().toString(36).substr(2, 9), // Generate unique ID
-          userId: '1', // Static user ID for demo
-          createdAt: new Date().toISOString(), // Set current timestamp
-          // Ensure local image type for new products
+          id: Math.random().toString(36).substr(2, 9),
+          userId: '1',
+          createdAt: new Date().toISOString(),
           images: product.images?.map((img) => ({
             ...img,
-            id: img.id || Math.random().toString(36).substr(2, 9), // Generate unique ID for images
-            type: 'local' // Set image type to 'local'
+            id: img.id || Math.random().toString(36).substr(2, 9),
+            url: typeof img.url === 'string' ? img.url : new URL(img.url, import.meta.url).href,
+            type: 'local'
           })) || []
         };
         set((state) => ({ products: [...state.products, newProduct] }));
       },
 
-      // Update an existing product in the store
       updateProduct: (id, product) => {
         set((state) => ({
           products: state.products.map((p) =>
-            p.id === id
-              ? {
-                  ...p,
-                  ...product,
-                  // Ensure local image type when updating
-                  images: product.images?.map((img) => ({
-                    ...img,
-                    id: img.id || Math.random().toString(36).substr(2, 9), // Generate unique ID for images
-                    type: 'local' // Set image type to 'local'
-                  })) || p.images
-                }
-              : p
+            p.id === id ? {
+              ...p,
+              ...product,
+              images: product.images?.map((img) => ({
+                ...img,
+                id: img.id || Math.random().toString(36).substr(2, 9),
+                url: typeof img.url === 'string' ? img.url : new URL(img.url, import.meta.url).href,
+                type: 'local'
+              })) || p.images
+            } : p
           ),
         }));
       },
 
-      // Delete a product from the store
       deleteProduct: (id) => {
         set((state) => ({
-          products: state.products.filter((p) => p.id !== id), // Remove the product by ID
+          products: state.products.filter((p) => p.id !== id),
         }));
       },
 
-      // Get a product by ID
       getProduct: (id) => {
-        return get().products.find((p) => p.id === id); // Find and return the product by ID
+        return get().products.find((p) => p.id === id);
       },
 
-      // Get all products by brand ID
       getProductsByBrand: (brandId) => {
-        return get().products.filter((p) => p.brandId === brandId); // Filter products by brandId
+        return get().products.filter((p) => p.brandId === brandId);
       },
     }),
     {
-      name: 'products-storage', // Persist store with a specific name
+      name: 'products-storage',
     }
   )
 );
