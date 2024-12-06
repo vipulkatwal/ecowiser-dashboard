@@ -53,9 +53,9 @@ export default function ProductsList() {
 
       {/* Products Table Section */}
       <div className="bg-white rounded-lg shadow">
-        <div className="p-4 flex items-center justify-between">
+        <div className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           {/* Search Input */}
-          <div className="w-1/2">
+          <div className="w-full sm:w-1/2">
             <SearchInput
               placeholder="Search products..."
               onSearch={setSearchQuery}
@@ -63,12 +63,18 @@ export default function ProductsList() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-2">
-            <Button onClick={() => setIsFormOpen(true)}>
+          <div className="flex space-x-2 w-full sm:w-auto">
+            <Button
+              onClick={() => setIsFormOpen(true)}
+              className="w-full sm:w-auto text-sm px-3 py-2"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
-            <Button variant="secondary">
+            <Button
+              variant="secondary"
+              className="w-full sm:w-auto text-sm px-3 py-2"
+            >
               <Upload className="h-4 w-4 mr-2" />
               Import CSV
             </Button>
